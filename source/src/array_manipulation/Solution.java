@@ -12,8 +12,7 @@ public class Solution {
 
     // Complete the arrayManipulation function below.
     static long arrayManipulation(int n, int[][] queries) {
-
-
+        return 0;
     }
 
     private static final Scanner scanner = new Scanner(System.in);
