@@ -12,35 +12,42 @@ import java.util.stream.Collectors;
 public class Solution {
 
     static float calcMedian(int[] freq) {
-//        if (input.size() == 0) {
-//            return -1;
-//        }
-//        else if (input.size() == 1) {
-//            return input.get(0);
-//        }
-//        else if (input.size() % 2 == 0) {
-//            return (float) (input.get(input.size() / 2) + input.get(input.size() / 2 + 1)) / 2;
-//        } else {
-//            return input.get(input.size() / 2);
-//        }
         int[] prefix_sum = new int[201];
 
         prefix_sum[0] = freq[0];
         for (int ix = 1; ix < freq.length; ix++) {
-            prefix_sum[ix] += prefix_sum[ix - 1];
+            prefix_sum[ix] += freq[ix] + prefix_sum[ix - 1];
         }
 
-        int total = prefix_sum[prefix_sum.length - 1];
-        int first_ix = prefix_sum[prefix_sum.length / 2];
-        int second_ix = prefix_sum[prefix_sum.length / 2 + 1];
+        int len = prefix_sum[prefix_sum.length - 1];
+        int median1Ix = len / 2;
+        int median2Ix = median1Ix + 1;
 
-        int first_median;
-        int second_median;
+        int median1 = 0;
+        int median2 = 0;
 
-//        for (int prefIx = 0; prefIx < prefix_sum.length; prefIx++) {
-//
-//        }
-        return 0;
+        boolean median1Found = false;
+        boolean median2Found = false;
+
+        for (int ix = 0; ix < freq.length; ix++) {
+            if (!median1Found && median1Ix <= prefix_sum[ix]) {
+                median1 = ix;
+                median1Found = true;
+            }
+            if (!median2Found && median2Ix <= prefix_sum[ix]) {
+                median2 = ix;
+                median2Found = true;
+            }
+            if (median1Found && median2Found) {
+                break;
+            }
+        }
+
+        if (len % 2 == 0) {
+            return (float) (median1 + median2) / 2;
+        } else {
+            return (float) median2;
+        }
     }
 
     // Complete the activityNotifications function below.
@@ -53,30 +60,14 @@ public class Solution {
         // 0 <= x <= 200
         int[] freq = new int[201];
 
-        List<Integer> rangeArr = new ArrayList<>();
-
         for (int ix = d; ix < expenditure.length; ix++) {
             if (ix == d) {
                 for (int l = 0; l < ix; l++) {
                     freq[expenditure[l]]++;
                 }
-
-//                rangeArr = Arrays.stream( Arrays.copyOfRange(expenditure, ix - d, ix) ).boxed().collect(Collectors.toCollection(ArrayList::new));
-//                rangeArr.sort(Integer::compareTo);
             } else {
                 freq[expenditure[ix - d - 1]]--;
                 freq[expenditure[ix - 1]]++;
-
-//                int rangeIdxRemove = find(rangeArr, expenditure[ix - d - 1]);
-//                rangeArr.remove(rangeIdxRemove);
-//
-//                if (rangeArr.get(0) > expenditure[ix - 1]) {
-//                    rangeArr.add(0, expenditure[ix - 1]);
-//                } else if (rangeArr.get(rangeArr.size() - 1) < expenditure[ix - 1]) {
-//                    rangeArr.add(expenditure[ix - 1]);
-//                } else {
-//                    rangeArr.add(find(rangeArr, expenditure[ix - 1]) + 1, expenditure[ix - 1]);
-//                }
             }
 
             float median = calcMedian(freq);
