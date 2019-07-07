@@ -37,9 +37,10 @@ public class Solution {
         int first_median;
         int second_median;
 
-        for (int prefIx = 0; prefIx < prefix_sum.length; prefIx++) {
-
-        }
+//        for (int prefIx = 0; prefIx < prefix_sum.length; prefIx++) {
+//
+//        }
+        return 0;
     }
 
     // Complete the activityNotifications function below.
@@ -78,7 +79,7 @@ public class Solution {
 //                }
             }
 
-            float median = calcMedian(rangeArr);
+            float median = calcMedian(freq);
             if (expenditure[ix] >= median * 2) {
                 notifications++;
             }
