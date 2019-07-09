@@ -32,7 +32,6 @@ public class Solution {
         }
 
         private void merge(int [] array, int [] helper, int start, int mid, int end) {
-
             /* Fill helper array with same elements as original array */
             for (int i = start; i <= end; i++) { // notice "i" goes from "start" to "end", not "0" to "array.length"
                 helper[i] = array[i];
@@ -43,7 +42,7 @@ public class Solution {
             int right = mid + 1;
 
             /* Loop through helper[] left and right halves and continuously copy smaller element to array[] */
-            while (left <= mid && right <= end) {
+            while (left < mid && right < end) {
                 if (helper[left] <= helper[right]) {
                     array[curr++] = helper[left++];
                 } else {
