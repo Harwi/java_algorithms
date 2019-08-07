@@ -20,16 +20,16 @@ public class Solution {
                 tree[ix * 2 + 1] = indexes[ix][0];
                 tree[ix * 2 + 2] = indexes[ix][1];
             }
-            levels = (int) Math.log(tree.length);
+            levels = getLevel(tree.length - 1);
         }
 
-        public void swapLevel(int lvl) {
+        private void swapLevel(int lvl) {
             if (lvl > levels) {
                 throw new IllegalStateException(String.format("Swap level %s is out of bounds", lvl));
             }
-            int start_ix = (int) (Math.pow(2, lvl - 1) - 1);
-            int end_ix = (int) (Math.pow(2, lvl) - 1);
-            for (int ix = start_ix; ix < end_ix; ix =+ 2) {
+            int start_ix = getLevelStartIx(lvl);
+            int end_ix = getLevelEndIx(lvl);
+            for (int ix = start_ix; ix < end_ix; ix += 2) {
                 int buff = tree[ix];
                 tree[ix] = tree[ix + 1];
                 tree[ix + 1] = buff;
@@ -43,6 +43,50 @@ public class Solution {
                 multiplier++;
             }
         }
+
+        private int leftIx(int parentIx) {
+            return parentIx * 2;
+        }
+
+        private int rightIx(int parentIx) {
+            return leftIx(parentIx) + 1;
+        }
+
+        private int getLevel(int ix) {
+            return (int) Math.ceil(Math.log(ix) + 1);
+        }
+
+        private int getLevelStartIx(int lvl) {
+            return (int) (Math.pow(2, lvl - 1) - 1);
+        }
+
+        private int getLevelEndIx(int lvl) {
+            return (int) (Math.pow(2, lvl) - 1);
+        }
+
+        public int[] traverse() {
+            List<Integer> elements = new LinkedList<>();
+            // left tree
+            traverseRecur(1, elements);
+            // root
+            elements.add(tree[0]);
+            // right tree
+            traverseRecur(2, elements);
+
+            return elements.stream().mapToInt(i -> i).toArray();
+        }
+
+        private void traverseRecur(int ix, List<Integer> elements) {
+            if (leftIx(ix) < tree.length && tree[leftIx(ix)] != -1) {
+                int leftIx = leftIx(ix);
+                elements.add(tree[leftIx]);
+                traverseRecur(leftIx, elements);
+            } else if (rightIx(ix) < tree.length && tree[rightIx(ix)] != -1) {
+                int rightIx = rightIx(ix);
+                elements.add(tree[rightIx]);
+                traverseRecur(rightIx, elements);
+            }
+        }
     }
 
 
@@ -50,19 +94,15 @@ public class Solution {
      * Complete the swapNodes function below.
      */
     static int[][] swapNodes(int[][] indexes, int[] queries) {
-        int[] tree = new int[1 + indexes.length * 2];
+        BinaryTree binaryTree = new BinaryTree(indexes);
+        int[][] res_indexes = new int[queries.length][];
 
-        /*
-         * Write your code here.
-         */
-        tree[0] = 1;
-        for (int ix = 0; ix < indexes.length; ix++) {
-            tree[ix * 2 + 1] = indexes[ix][0];
-            tree[ix * 2 + 2] = indexes[ix][1];
+        for (int ix = 0; ix < queries.length; ix++) {
+            binaryTree.swap(queries[ix]);
+            res_indexes[ix] = binaryTree.traverse();
         }
 
-
-
+        return res_indexes;
     }
 
     private static final Scanner scanner = new Scanner(System.in);
