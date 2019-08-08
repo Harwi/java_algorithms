@@ -1,19 +1,16 @@
 package swap_nodes;
 
 import java.io.*;
-import java.math.*;
-import java.text.*;
 import java.util.*;
-import java.util.regex.*;
 
 public class Solution {
 
-    static class BinaryTree {
+    static class BinaryTreeArrBased {
 
         Integer[] tree;
         int levels;
 
-        public BinaryTree(int[][] indexes) {
+        public BinaryTreeArrBased(int[][] indexes) {
             tree = new Integer[1 + indexes.length * 2];
             levels = (int) Math.ceil(Math.log(tree.length)/Math.log(2));
             int tree_size = (int) Math.pow(2, levels);
@@ -106,17 +103,112 @@ public class Solution {
         }
     }
 
+    static class Node {
+
+        final Integer val;
+        Node left;
+        Node right;
+
+        public Node(Integer val) {
+            this.val = val;
+
+        }
+
+        public Node getLeft() {
+            return left;
+        }
+
+        public void setLeft(Node left) {
+            this.left = left;
+        }
+
+        public Node getRight() {
+            return right;
+        }
+
+        public void setRight(Node right) {
+            this.right = right;
+        }
+
+        public boolean hasChildren() {
+            return (this.left != null || this.right != null);
+        }
+
+        public void swapNode(int k) {
+            swapNodeRecur(this, k, 1);
+        }
+
+        private static void swapNodeRecur(Node node, int k, int nodeLevel) {
+            if (nodeLevel % k == 0) {
+                Node buffNode = node.left;
+                node.left = node.right;
+                node.right = buffNode;
+            }
+
+            if (node.left != null) {
+                swapNodeRecur(node.left, k, nodeLevel + 1);
+            }
+            if (node.right != null) {
+                swapNodeRecur(node.right, k, nodeLevel + 1);
+            }
+        }
+
+        public int[] traverse() {
+            ArrayList<Integer> indexesInOrder = new ArrayList<>();
+
+            if (this.left != null) {
+                traverseRecur(this.left, indexesInOrder);
+            }
+            indexesInOrder.add(this.val);
+            if (this.right != null) {
+                traverseRecur(this.right, indexesInOrder);
+            }
+
+            int[] res = new int[indexesInOrder.size()];
+            for (int ix = 0; ix < indexesInOrder.size(); ix++) {
+                res[ix] = indexesInOrder.get(ix);
+            }
+
+            return res;
+        }
+
+        public static void traverseRecur(Node node, ArrayList<Integer> indexes) {
+            if (node.left != null) {
+                traverseRecur(node.left, indexes);
+            }
+            indexes.add(node.val);
+            if (node.right != null) {
+                traverseRecur(node.right, indexes);
+            }
+        }
+    }
 
     /*
      * Complete the swapNodes function below.
      */
     static int[][] swapNodes(int[][] indexes, int[] queries) {
-        BinaryTree binaryTree = new BinaryTree(indexes);
+        //BinaryTreeArrBased binaryTree = new BinaryTreeArrBased(indexes);
+        Queue<Node> nodeQueue = new LinkedList<>();
+        Node rootNode = new Node(1);
+        nodeQueue.add(rootNode);
+
         int[][] res_indexes = new int[queries.length][];
 
-        for (int ix = 0; ix < queries.length; ix++) {
-            binaryTree.swap(queries[ix]);
-            res_indexes[ix] = binaryTree.traverse();
+        for (int ix = 0; ix < indexes.length && nodeQueue.peek() != null; ix++) {
+            Node parent = nodeQueue.poll();
+            if (indexes[ix][0] != -1) {
+                parent.setLeft(new Node(indexes[ix][0]));
+                nodeQueue.offer(parent.left);
+            }
+            if (indexes[ix][1] != -1) {
+                parent.setRight(new Node(indexes[ix][1]));
+                nodeQueue.offer(parent.right);
+            }
+        }
+
+        for (int ixQuery = 0; ixQuery < queries.length; ixQuery++) {
+            rootNode.swapNode(queries[ixQuery]);
+            res_indexes[ixQuery] = rootNode.traverse();
         }
 
         return res_indexes;
