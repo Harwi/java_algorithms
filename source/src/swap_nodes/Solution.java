@@ -10,26 +10,39 @@ public class Solution {
 
     static class BinaryTree {
 
-        int[] tree;
+        Integer[] tree;
         int levels;
 
         public BinaryTree(int[][] indexes) {
-            tree = new int[1 + indexes.length * 2];
+            tree = new Integer[1 + indexes.length * 2];
+            levels = (int) Math.ceil(Math.log(tree.length)/Math.log(2));
+            int tree_size = (int) Math.pow(2, levels);
             tree[0] = 1;
             for (int ix = 0; ix < indexes.length; ix++) {
                 tree[ix * 2 + 1] = indexes[ix][0];
                 tree[ix * 2 + 2] = indexes[ix][1];
             }
-            levels = getLevel(tree.length - 1);
+            ArrayList<Integer> fillGapsTree = new ArrayList<>(Arrays.asList(tree));
+            // filling gaps
+            for (int ix = 0; leftIx(ix) < tree_size; ix++) {
+                if (fillGapsTree.get(ix) == -1) {
+                    int leftIx = leftIx(ix);
+                    int rightIx = leftIx + 1;
+                        fillGapsTree.add(leftIx, -1);
+                        fillGapsTree.add(rightIx, -1);
+                }
+            }
+            tree = fillGapsTree.toArray(new Integer[fillGapsTree.size()]);
         }
 
         private void swapLevel(int lvl) {
             if (lvl > levels) {
                 throw new IllegalStateException(String.format("Swap level %s is out of bounds", lvl));
             }
-            int start_ix = getLevelStartIx(lvl);
-            int end_ix = getLevelEndIx(lvl);
-            for (int ix = start_ix; ix < end_ix; ix += 2) {
+            // Get indexes for direct children
+            int start_ix = getLevelStartIx(lvl + 1);
+            int end_ix = getLevelEndIx(lvl + 1);
+            for (int ix = start_ix; ix < end_ix && end_ix < tree.length; ix += 2) {
                 int buff = tree[ix];
                 tree[ix] = tree[ix + 1];
                 tree[ix + 1] = buff;
@@ -38,14 +51,18 @@ public class Solution {
 
         public void swap(int k) {
             int multiplier = 1;
-            while (multiplier * k <= levels) {
+            while (multiplier * k < levels) {
                 swapLevel(multiplier * k);
                 multiplier++;
             }
         }
 
+        private int parentIx(int ix) {
+            return (int) Math.ceil(ix / 2);
+        }
+
         private int leftIx(int parentIx) {
-            return parentIx * 2;
+            return parentIx * 2 + 1;
         }
 
         private int rightIx(int parentIx) {
@@ -61,7 +78,7 @@ public class Solution {
         }
 
         private int getLevelEndIx(int lvl) {
-            return (int) (Math.pow(2, lvl) - 1);
+            return (int) (Math.pow(2, lvl) - 2);
         }
 
         public int[] traverse() {
