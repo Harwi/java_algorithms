@@ -12,24 +12,60 @@ public class Solution {
     // n - number of candies to produce
     static long minimumPasses(long m, long w, long p, long n) {
         long passes = 0;
-        long produced = 0;
+        double produced = 0;
+        double producedThisTurn;
+        double md = m;
+        double wd = w;
+        double mi;
+        double wi;
+        double addPower;
+        double mwDiff;
+        double freeAfterEq;
+        double missing;
 
         while (produced < n) {
-                while (produced - p >= 0 && produced + m * w < n) {
-                    long mi = (m > w) ? m : m + 1;
-                    long wi = (m > w) ? w + 1 : w;
-                    if ( (n - (produced - p)) / (mi * wi) <= (n - produced) / (m * w)) {
-                        m = mi;
-                        w = wi;
-                        produced = produced - p;
-                    } else {
-                        break;
+            producedThisTurn = md * wd;
+            if ((produced + producedThisTurn) < n) {
+//                if (produced - p < 0 && (long) producedThisTurn / p > 1) {
+//                    long shiftPasses = (long) Math.floor((p - produced) / producedThisTurn);
+//                    produced = produced + producedThisTurn * shiftPasses;
+//                    passes = passes + shiftPasses;
+//                    continue;
+//                }
+
+                if (produced - p >= 0) {
+
+                    addPower = Math.floor(produced / p);
+                    mwDiff = Math.abs(md - wd);
+                    freeAfterEq = 0;
+
+                    if (addPower > mwDiff) {
+                        freeAfterEq = addPower - mwDiff;
+                    }
+
+                    double minAdd = Math.min(mwDiff, addPower);
+
+                    mi = ((md > wd) ? md : md + minAdd) + Math.floor(freeAfterEq / 2);
+                    wi = ((md > wd) ? wd + minAdd : wd) + (freeAfterEq - Math.floor(freeAfterEq / 2));
+
+                    missing = n - produced;
+
+                    double cost = addPower * p;
+                    double producedUpdated = mi * wi;
+
+                    if ( ((missing + cost) / (producedUpdated)) <= (missing / (producedThisTurn))) {
+                        producedThisTurn = producedUpdated;
+                        md = mi;
+                        wd = wi;
+                        produced = produced - cost;
                     }
                 }
+            }
 
-            produced = produced + m * w;
-                passes++;
+            produced = produced + producedThisTurn;
+            passes++;
         }
+
         return passes;
     }
 
