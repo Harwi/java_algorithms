@@ -11,25 +11,27 @@ import java.util.regex.*;
 public class Solution {
 
     static boolean abbreviationRecur(String a, String b, int ixA, int ixB) {
-        if (ixA >= a.length() && ixB >= b.length()) {
+
+        ixA = Math.min(ixA, a.length() - 1);
+        ixB = Math.min(ixB, b.length() - 1);
+
+        if (Character.isUpperCase(a.charAt(ixA)) && a.charAt(ixA) != b.charAt(ixB)) {
+            return false;
+        } else if (ixA == a.length() - 1 && ixB == b.length() - 1 && Character.toUpperCase(a.charAt(ixA)) != b.charAt(ixB)) {
+            return false;
+        }
+
+        if (ixA == a.length() - 1 && ixB == b.length() - 1) {
             return true;
         }
-        else if (ixA >= a.length() && ixB < b.length()) {
-            return false;
-        }
-        ixA = ixA >= a.length() ? a.length() - 1 : ixA;
-        ixB = ixB >= b.length() ? b.length() - 1 : ixB;
 
-        boolean canSkip = false;
-        if (Character.isLowerCase(a.charAt(ixA))) {
-            canSkip = true;
-        }
-        if (!canSkip && a.charAt(ixA) != b.charAt(ixB)) {
-            return false;
-        }
-        return (a.charAt(ixA) == b.charAt(ixB) ? abbreviationRecur(a, b, ixA + 1, ixB + 1) : false )
+//        System.out.println(a.substring(0, ixA + 1));
+//        System.out.println(b.substring(0, ixB + 1));
+//        System.out.println("------");
+
+        return (ixB < b.length() ? abbreviationRecur(a, b, ixA + 1, ixB + 1) : false)
                 ||
-                (canSkip ? abbreviationRecur(a, b, ixA + 1, ixB) : false);
+                (Character.isLowerCase(a.charAt(ixA)) ? abbreviationRecur(a, b, ixA + 1, ixB) : false);
     }
 
     // Complete the abbreviation function below.
