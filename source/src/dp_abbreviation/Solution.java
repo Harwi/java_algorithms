@@ -10,33 +10,37 @@ import java.util.regex.*;
 
 public class Solution {
 
-    static boolean abbreviationRecur(String a, String b, int ixA, int ixB) {
+    static boolean abbreviationRecur(String a, String b, int ixA, int ixB, boolean bFin) {
 
         ixA = Math.min(ixA, a.length() - 1);
         ixB = Math.min(ixB, b.length() - 1);
+        boolean isUpperCase = Character.isUpperCase(a.charAt(ixA));
 
-        if (Character.isUpperCase(a.charAt(ixA)) && a.charAt(ixA) != b.charAt(ixB)) {
-            return false;
-        } else if (ixA == a.length() - 1 && ixB == b.length() - 1 && Character.toUpperCase(a.charAt(ixA)) != b.charAt(ixB)) {
+        if (isUpperCase && (a.charAt(ixA) != b.charAt(ixB) || bFin)) {
             return false;
         }
-
+        if (ixB == b.length() - 1 && Character.toUpperCase(a.charAt(ixA)) == b.charAt(ixB)) {
+            bFin = true;
+        }
         if (ixA == a.length() - 1 && ixB == b.length() - 1) {
-            return true;
+            return bFin;
         }
 
-//        System.out.println(a.substring(0, ixA + 1));
-//        System.out.println(b.substring(0, ixB + 1));
-//        System.out.println("------");
+        System.out.println(a.substring(0, ixA + 1));
+        System.out.println(b.substring(0, ixB + 1));
+        System.out.println("------");
 
-        return (ixB < b.length() ? abbreviationRecur(a, b, ixA + 1, ixB + 1) : false)
+        return (ixB < b.length() ? abbreviationRecur(a, b, ixA + 1, ixB + 1, bFin) : false)
                 ||
-                (Character.isLowerCase(a.charAt(ixA)) ? abbreviationRecur(a, b, ixA + 1, ixB) : false);
+                (!isUpperCase ? abbreviationRecur(a, b, ixA + 1, ixB, bFin) : false)
+                ||
+                (!isUpperCase && bFin ? abbreviationRecur(a, b, ixA + 1, ixB, false) : false)
+                ;
     }
 
     // Complete the abbreviation function below.
     static String abbreviation(String a, String b) {
-        boolean res = abbreviationRecur(a, b, 0, 0);
+        boolean res = abbreviationRecur(a, b, 0, 0, false);
         return res  ? "YES" : "NO";
     }
 
