@@ -12,8 +12,57 @@ public class Solution {
 
     // Complete the roadsAndLibraries function below.
     static long roadsAndLibraries(int n, int c_lib, int c_road, int[][] cities) {
+        long costTotal = 0;
+        if (c_lib <= c_road) {
+            costTotal = (long) c_lib * n;
+        } else {
+            AdjMatrix adjMatrix = new AdjMatrix(n, cities);
 
+            for (int cityIx = 0; cityIx < n; cityIx++) {
+                long roads = adjMatrix.dfs(cityIx);
+                if (roads >= 0) {
+                    //System.out.println("Roads = " + roads);
+                    costTotal = costTotal + roads * (long) c_road + c_lib;
+                }
+            }
+        }
 
+        //System.out.println("Result cost = " + costTotal);
+        return costTotal;
+    }
+
+    static class AdjMatrix {
+        final ArrayList<Integer>[] adjCities;
+        final boolean[] visited;
+
+        public AdjMatrix(int citiesNum, int[][] cities) {
+            this.adjCities = (ArrayList<Integer>[]) new ArrayList[citiesNum];
+            this.visited = new boolean[citiesNum];
+
+            for (int ix = 0; ix < citiesNum; ix++) {
+                this.adjCities[ix] = new ArrayList<>();
+            }
+
+            for (int roadIx = 0; roadIx < cities.length; roadIx++) {
+                adjCities[cities[roadIx][0] - 1].add(cities[roadIx][1] - 1);
+                adjCities[cities[roadIx][1] - 1].add(cities[roadIx][0] - 1);
+            }
+        }
+
+        long dfs(int city) {
+            if (visited[city]) {
+                return -1;
+            }
+            visited[city] = true;
+            long res = 0;
+            for (Integer adjCity : adjCities[city]) {
+                if (!visited[adjCity]) {
+                    //System.out.println("Traversing through path = <" + (cityIx + 1) + "> <" + (adjCityIx + 1) + ">");
+                    res = res + 1 + dfs(adjCity);
+                }
+            }
+            return res;
+        }
     }
 
     private static final Scanner scanner = new Scanner(System.in);
