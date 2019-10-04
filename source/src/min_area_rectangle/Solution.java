@@ -4,42 +4,33 @@ import java.util.*;
 
 public class Solution {
 
-    public static void main(String[] args) {
-        int[][] points = new int[][];
-        int res = minAreaRect(points);
-    }
+    public int minAreaRect(int[][] points) {
+        Map<Integer,Set<Integer>> map = new HashMap<>();
+        int minArea = Integer.MAX_VALUE;
 
-    public static int minAreaRect(int[][] points) {
-        final int limit = 40001;
-
-        Map<Integer, HashSet<Integer>> xMap = new HashMap<>();
-        Map<Integer, HashSet<Integer>> yMap = new HashMap<>();
-
-        for (int[] point: points) {
-            int x = point[0], y = point[1];
-            xMap.computeIfAbsent(x, v -> new HashSet<>()).add(y);
-            yMap.computeIfAbsent(y, v -> new HashSet<>()).add(x);
+        for(int[] point:points){
+            // Group Y coordinates under the same X
+            map.computeIfAbsent(point[0], v -> new HashSet<>()).add(point[1]);
         }
 
+        int len = points.length;
+        for(int i=0;i<len-1;i++){
+            for(int j=i+1;j<len;j++){
+                //always get two points
+                int width = Math.abs(points[j][0] - points[i][0]);
+                int height = Math.abs(points[j][1] - points[i][1]);
+                int area = width*height;
 
+                if (area == 0 || area > minArea)
+                    continue;
 
-
-
-        int ans = Integer.MAX_VALUE;
-        Map<Integer, Integer> lastx = new HashMap();
-        for (int x: rows.keySet()) {
-            List<Integer> row = rows.get(x);
-            Collections.sort(row);
-            for (int i = 0; i < row.size(); ++i)
-                for (int j = i+1; j < row.size(); ++j) {
-                    int y1 = row.get(i), y2 = row.get(j);
-                    int code = 40001 * y1 + y2;
-                    if (lastx.containsKey(code))
-                        ans = Math.min(ans, (x - lastx.get(code)) * (y2-y1));
-                    lastx.put(code, x);
+                // Check if the corresponding pair of points exists
+                if (map.get(points[i][0]).contains(points[j][1]) && map.get(points[j][0]).contains(points[i][1])) {
+                    minArea = area;
                 }
+            }
         }
 
-        return ans < Integer.MAX_VALUE ? ans : 0;
+        return (minArea==Integer.MAX_VALUE) ? 0 : minArea;
     }
 }
