@@ -10,9 +10,51 @@ import java.util.regex.*;
 
 public class Solution {
 
+    static class Node {
+        List<Node> children;
+        long cumulativeSum;
+        int index;
+
+        public Node(int index) {
+            this(new ArrayList<>(), index);
+        }
+
+        public Node(List<Node> children, int index) {
+            this.children = children;
+            this.cumulativeSum = 0;
+            this.index = index;
+        }
+
+        public void setCumulativeSum(long cumulativeSum) {
+            this.cumulativeSum = cumulativeSum;
+        }
+
+        public List<Node> getChildren() {
+            return children;
+        }
+
+        public long getCumulativeSum() {
+            return cumulativeSum;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void addChild(Node node) {
+            this.children.add(node);
+        }
+    }
+
     // Complete the balancedForest function below.
     static int balancedForest(int[] c, int[][] edges) {
+        Node[] nodes = new Node[edges.length];
 
+        for (int egdeIx = 0; egdeIx < edges.length; egdeIx++) {
+            Node node = new Node(edges[egdeIx][0]);
+            node.addChild(new Node(edges[egdeIx][1]));
+            nodes[node.getIndex()] =
+        }
 
     }
 
@@ -61,3 +103,4 @@ public class Solution {
         scanner.close();
     }
 }
+
