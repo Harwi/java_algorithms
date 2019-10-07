@@ -53,9 +53,10 @@ public class Solution {
         for (int egdeIx = 0; egdeIx < edges.length; egdeIx++) {
             Node node = new Node(edges[egdeIx][0]);
             node.addChild(new Node(edges[egdeIx][1]));
-            nodes[node.getIndex()] =
+            //nodes[node.getIndex()] =
         }
 
+        return 0;
     }
 
     private static final Scanner scanner = new Scanner(System.in);

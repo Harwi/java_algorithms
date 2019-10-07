@@ -8,20 +8,23 @@ public class Solution {
         Map<Integer,Set<Integer>> map = new HashMap<>();
         int minArea = Integer.MAX_VALUE;
 
-        for(int[] point:points){
+        for(int[] pairXY : points){
             // Group Y coordinates under the same X
-            map.computeIfAbsent(point[0], v -> new HashSet<>()).add(point[1]);
+            map.computeIfAbsent(pairXY[0], v -> new HashSet<>()).add(pairXY[1]);
         }
 
         int len = points.length;
         for(int i=0;i<len-1;i++){
             for(int j=i+1;j<len;j++){
-                //always get two points
-                int width = Math.abs(points[j][0] - points[i][0]);
-                int height = Math.abs(points[j][1] - points[i][1]);
-                int area = width*height;
+                // check for area == 0
+                if (points[i][0] == points[j][0] || points[i][1] == points[j][1]) {
+                    continue;
+                }
 
-                if (area == 0 || area > minArea)
+                // width * height
+                int area = Math.abs((points[j][0] - points[i][0]) * (points[j][1] - points[i][1]));
+
+                if (area > minArea)
                     continue;
 
                 // Check if the corresponding pair of points exists
