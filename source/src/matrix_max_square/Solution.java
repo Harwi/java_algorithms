@@ -15,21 +15,26 @@ public class Solution {
     }
 
     public static int maximalSquare(char[][] matrix) {
-        int maxSquare = 0;
 
+        if (matrix.length == 0) {
+            return 0;
+        }
+
+        int maxSquare = 0;
         for (int row = 0; row < matrix.length; row++) {
             for (int col = 0; col < matrix[row].length; col++) {
-                if (maxSquare == 0 && matrix[row][col] != '0') {
-                    maxSquare = Character.getNumericValue(matrix[row][col]);
+                int curr = matrix[row][col] - '0';
+                if (maxSquare == 0 && curr != 0) {
+                    maxSquare = curr;
                 }
-                if (row > 0 && col > 0 && matrix[row][col] != '0') {
-                    if (matrix[row - 1][col - 1] != '0' && matrix[row - 1][col] != '0' && matrix[row][col - 1] != '0') {
-                        int left = Character.getNumericValue(matrix[row][col - 1]);
-                        int upper = Character.getNumericValue(matrix[row - 1][col]);
-                        int diag = Character.getNumericValue(matrix[row - 1][col - 1]);
-
-                        matrix[row][col] = Character.forDigit(Math.min(Math.min(left, upper), diag) + 1, 10);
-                        maxSquare = Math.max(maxSquare, Character.getNumericValue(matrix[row][col]));
+                if (row > 0 && col > 0 && curr != 0) {
+                    int left = matrix[row][col - 1] - '0';
+                    int upper = matrix[row - 1][col] - '0';
+                    int diag = matrix[row - 1][col - 1] - '0';
+                    if (left != 0 && upper != 0 && diag != 0) {
+                        curr = Math.min(Math.min(left, upper), diag) + 1;
+                        matrix[row][col] = (char) (curr + '0');
+                        maxSquare = Math.max(maxSquare, curr);
                     }
                 }
             }
