@@ -1,6 +1,5 @@
 package bst_validate;
 
-import javax.swing.tree.TreeNode;
 
 /**
  * Definition for a binary tree node.
@@ -11,7 +10,20 @@ import javax.swing.tree.TreeNode;
  *     TreeNode(int x) { val = x; }
  * }
  */
+
+
+
 class Solution {
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
     public boolean isValidBST(TreeNode root) {
         return check(root, Long.MIN_VALUE, Long.MAX_VALUE);
     }

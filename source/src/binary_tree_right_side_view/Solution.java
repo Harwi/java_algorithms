@@ -1,6 +1,5 @@
 package binary_tree_right_side_view;
 
-import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,16 @@ import java.util.List;
  * }
  */
 class Solution {
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
     public List<Integer> rightSideView(TreeNode root) {
         List<Integer> res = new ArrayList<>();
 
