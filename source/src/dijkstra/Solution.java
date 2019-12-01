@@ -53,7 +53,7 @@ public class Solution {
                     } else if (dist[vertex] + adjNode.cost < dist[adjNode.vertex]) {
                         newDistance = dist[vertex] + adjNode.cost;
                     } else {
-                        newDistance = dist[dist[adjNode.vertex]];
+                        newDistance = dist[adjNode.vertex];
                     }
                     dist[adjNode.vertex] = newDistance;
 
