@@ -1,4 +1,4 @@
-package backtobackswe.changeBase;
+package backtobackswe.change_base;
 
 class Solution {
     public String changeBase(String numAsString, int b1, int b2) {

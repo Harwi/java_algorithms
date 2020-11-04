@@ -1,4 +1,4 @@
-package backtobackswe.eliminateAllPrimes;
+package backtobackswe.eliminate_all_primes;
 
 import java.util.ArrayList;
 import java.util.List;

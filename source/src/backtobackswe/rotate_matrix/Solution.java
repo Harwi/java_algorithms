@@ -1,4 +1,4 @@
-package backtobackswe.rotateMatrix;
+package backtobackswe.rotate_matrix;
 
 class Solution {
     public int[][] rotate(int[][] matrix) {

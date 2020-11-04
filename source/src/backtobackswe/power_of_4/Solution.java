@@ -1,4 +1,4 @@
-package backtobackswe.powerOf4;
+package backtobackswe.power_of_4;
 
 public class Solution {
     public boolean powerOfFour(int input) {
