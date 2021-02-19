@@ -1,8 +1,6 @@
 package backtobackswe.replace_words_with_prefix;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 class Solution {
 
